@@ -20,6 +20,8 @@ import TestimonialsPage from "./pages/TestimonialsPage";
 import ContactPage from "./pages/ContactPage";
 import NutritionTracker from "./pages/NutritionTracker";
 import PremiumNutritionTracker from "./pages/PremiumNutritionTracker";
+import PremiumWelcome from "./pages/PremiumWelcome";
+import PremiumDetails from "./pages/PremiumDetails";
 import NotFound from "./pages/NotFound";
 import SkinnyToMuscularPlan from "./pages/SkinnyToMuscularPlan";
 import FatToMuscularPlan from "./pages/FatToMuscularPlan";
@@ -50,6 +52,9 @@ const App = () => (
           <Route path="/diet-planner" element={<DietPlanner />} />
           <Route path="/maintenance-diet-logs" element={<MaintenanceDietLogs />} />
           <Route path="/nutrition-tracker" element={<NutritionTracker />} />
+          <Route path="/premium/welcome" element={<PremiumWelcome />} />
+          <Route path="/premium/details" element={<PremiumDetails />} />
+          <Route path="/premium/dashboard" element={<PremiumNutritionTracker />} />
           <Route path="/premium-nutrition-tracker" element={<PremiumNutritionTracker />} />
           <Route path="/premium" element={<Premium />} />
           <Route path="/skinny-to-muscular-plan" element={<SkinnyToMuscularPlan />} />

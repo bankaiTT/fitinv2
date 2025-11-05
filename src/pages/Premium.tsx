@@ -24,9 +24,9 @@ const Premium = () => {
   const [goal, setGoal] = useState('muscle-gain');
   const [selectedMeal, setSelectedMeal] = useState<string | null>(null);
 
-  // Redirect to the correct premium tracker
+  // Redirect to welcome page
   useEffect(() => {
-    navigate('/premium-nutrition-tracker', { replace: true });
+    navigate('/premium/welcome', { replace: true });
   }, [navigate]);
 
   // Sample meal data

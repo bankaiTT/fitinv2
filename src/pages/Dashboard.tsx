@@ -178,7 +178,7 @@ const Dashboard = () => {
             </div>
 
             <div
-              onClick={() => navigate('/nutrition-tracker')}
+              onClick={() => navigate('/premium/dashboard')}
               className="glass-card p-8 rounded-2xl cursor-pointer hover:shadow-lavender-glow transition-all duration-300 group"
             >
               <div className="flex items-center gap-4 mb-4">
