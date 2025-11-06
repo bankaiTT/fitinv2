@@ -26,6 +26,8 @@ import NotFound from "./pages/NotFound";
 import SkinnyToMuscularPlan from "./pages/SkinnyToMuscularPlan";
 import FatToMuscularPlan from "./pages/FatToMuscularPlan";
 import HomeWorkoutPlan from "./pages/HomeWorkoutPlan";
+import CutDietLogs from "./pages/CutDietLogs";
+import BulkDietLogs from "./pages/BulkDietLogs";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +53,8 @@ const App = () => (
           <Route path="/workout-planner" element={<WorkoutPlanner />} />
           <Route path="/diet-planner" element={<DietPlanner />} />
           <Route path="/maintenance-diet-logs" element={<MaintenanceDietLogs />} />
+          <Route path="/cut-diet-logs" element={<CutDietLogs />} />
+          <Route path="/bulk-diet-logs" element={<BulkDietLogs />} />
           <Route path="/nutrition-tracker" element={<NutritionTracker />} />
           <Route path="/premium/welcome" element={<PremiumWelcome />} />
           <Route path="/premium/details" element={<PremiumDetails />} />
