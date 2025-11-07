@@ -121,7 +121,7 @@ const PremiumNutritionTracker = () => {
             className="text-4xl md:text-5xl font-bold mb-4"
           >
             Choose Your <span className="text-gradient">Goal</span>
-          </h1>
+          </motion.h1>
           <motion.p
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
