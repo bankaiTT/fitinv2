@@ -26,10 +26,10 @@ export const WorkoutLogging = () => {
         .from('workout_logs')
         .insert({
           user_id: user.id,
-          workout_type: workoutType,
+          exercise_type: workoutType,
           sets: parseInt(sets),
           reps: parseInt(reps),
-          weight_lbs: weight ? parseFloat(weight) : null,
+          weight: weight ? parseFloat(weight) : 0,
         });
 
       if (error) throw error;

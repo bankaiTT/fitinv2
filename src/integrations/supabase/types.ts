@@ -14,6 +14,99 @@ export type Database = {
   }
   public: {
     Tables: {
+      food_items: {
+        Row: {
+          calories: number
+          carbs: number
+          created_at: string | null
+          fat: number
+          food_name: string
+          id: string
+          protein: number
+          user_id: string
+        }
+        Insert: {
+          calories: number
+          carbs: number
+          created_at?: string | null
+          fat: number
+          food_name: string
+          id?: string
+          protein: number
+          user_id: string
+        }
+        Update: {
+          calories?: number
+          carbs?: number
+          created_at?: string | null
+          fat?: number
+          food_name?: string
+          id?: string
+          protein?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      meal_logs: {
+        Row: {
+          calories: number
+          carbs: number
+          created_at: string | null
+          fat: number
+          id: string
+          logged_at: string
+          meal_name: string
+          meal_type: string
+          protein: number
+          user_id: string
+        }
+        Insert: {
+          calories: number
+          carbs: number
+          created_at?: string | null
+          fat: number
+          id?: string
+          logged_at?: string
+          meal_name: string
+          meal_type: string
+          protein: number
+          user_id: string
+        }
+        Update: {
+          calories?: number
+          carbs?: number
+          created_at?: string | null
+          fat?: number
+          id?: string
+          logged_at?: string
+          meal_name?: string
+          meal_type?: string
+          protein?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rest_days: {
+        Row: {
+          created_at: string | null
+          id: string
+          rest_date: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          rest_date: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          rest_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_details: {
         Row: {
           activity_level: string
@@ -89,6 +182,30 @@ export type Database = {
         }
         Relationships: []
       }
+      user_plans: {
+        Row: {
+          created_at: string | null
+          id: string
+          plan_type: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          plan_type: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          plan_type?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -107,6 +224,39 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      workout_logs: {
+        Row: {
+          created_at: string | null
+          exercise_type: string
+          id: string
+          logged_at: string | null
+          reps: number
+          sets: number
+          user_id: string
+          weight: number
+        }
+        Insert: {
+          created_at?: string | null
+          exercise_type: string
+          id?: string
+          logged_at?: string | null
+          reps: number
+          sets: number
+          user_id: string
+          weight: number
+        }
+        Update: {
+          created_at?: string | null
+          exercise_type?: string
+          id?: string
+          logged_at?: string | null
+          reps?: number
+          sets?: number
+          user_id?: string
+          weight?: number
         }
         Relationships: []
       }

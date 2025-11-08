@@ -7,11 +7,30 @@ import { ArrowLeft, LogOut, Camera, ArrowRight } from 'lucide-react';
 import logo from '@/assets/fitin-final-logo.jpg';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { calculateMaintenanceCalories, calculateMacros } from '@/lib/calorieCalculator';
 
 const PremiumNutritionTracker = () => {
   const navigate = useNavigate();
-  const [maintenanceCalories, setMaintenanceCalories] = useState(2100);
+  const queryClient = useQueryClient();
+
+  // Fetch user details
+  const { data: userDetails, isLoading: detailsLoading } = useQuery({
+    queryKey: ['user-details'],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+      
+      const { data, error } = await supabase
+        .from('user_details')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+  });
 
   // Fetch user plan
   const { data: userPlan } = useQuery({
@@ -30,7 +49,25 @@ const PremiumNutritionTracker = () => {
     },
   });
 
+  // Calculate maintenance calories dynamically
+  const maintenanceCalories = userDetails 
+    ? calculateMaintenanceCalories({
+        age: userDetails.age,
+        weight: userDetails.weight,
+        height: userDetails.height,
+        gender: userDetails.gender as 'male' | 'female',
+        activity_level: userDetails.activity_level as any,
+      })
+    : 2100;
+
   const isPaidPlan = userPlan?.plan_type === 'paid';
+
+  // Redirect to premium-details if no user details
+  useEffect(() => {
+    if (!detailsLoading && !userDetails) {
+      navigate('/premium-details');
+    }
+  }, [userDetails, detailsLoading, navigate]);
 
   // Redirect to free tracker if user doesn't have paid plan
   useEffect(() => {
@@ -53,21 +90,54 @@ const PremiumNutritionTracker = () => {
     await supabase.auth.signOut();
     navigate('/');
   };
+
+  // Save goal mutation
+  const saveGoalMutation = useMutation({
+    mutationFn: async ({ goalType, macros }: { goalType: string; macros: any }) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      const { error } = await supabase
+        .from('user_goals')
+        .upsert({
+          user_id: user.id,
+          goal_type: goalType,
+          maintenance_calories: macros.maintenanceCalories,
+          target_calories: macros.targetCalories,
+          protein_grams: macros.protein,
+          carbs_grams: macros.carbs,
+          fat_grams: macros.fat,
+        }, { onConflict: 'user_id' });
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user-goals'] });
+    },
+  });
   
-  const selectGoal = (goal: 'maintain' | 'cut' | 'bulk') => {
-    let targetCalories = maintenanceCalories;
+  const selectGoal = async (goal: 'maintain' | 'cut' | 'bulk') => {
+    if (!userDetails) {
+      toast.error('User details not found');
+      return;
+    }
+
+    // Calculate macros dynamically
+    const macros = calculateMacros(maintenanceCalories, goal, userDetails.weight);
     
+    // Save to database
+    await saveGoalMutation.mutateAsync({ goalType: goal, macros });
+    
+    // Navigate to appropriate page
     if (goal === 'cut') {
-      targetCalories = Math.round(maintenanceCalories * 0.8);
       navigate('/cut-diet-logs');
     } else if (goal === 'bulk') {
-      targetCalories = Math.round(maintenanceCalories * 1.15);
       navigate('/bulk-diet-logs');
     } else {
       navigate('/maintenance-diet-logs');
     }
     
-    toast.success(`${goal.charAt(0).toUpperCase() + goal.slice(1)} plan selected! Target: ${targetCalories} kcal/day`);
+    toast.success(`${goal.charAt(0).toUpperCase() + goal.slice(1)} plan selected! Target: ${macros.targetCalories} kcal/day`);
   };
   return (
     <div className="min-h-screen bg-gradient-dark flex items-center justify-center px-4 py-12">

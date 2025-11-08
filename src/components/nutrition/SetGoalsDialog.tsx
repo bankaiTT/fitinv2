@@ -28,13 +28,19 @@ export const SetGoalsDialog = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
+      // This component is deprecated - goals are now set via PremiumNutritionTracker
+      // Keeping for backwards compatibility
       const { error } = await supabase
         .from('user_goals')
-        .insert({
+        .upsert({
           user_id: user.id,
           goal_type: goalType,
-          goal_value: goalValue,
-        });
+          maintenance_calories: 2000,
+          target_calories: 2000,
+          protein_grams: 150,
+          carbs_grams: 200,
+          fat_grams: 55,
+        }, { onConflict: 'user_id' });
 
       if (error) throw error;
     },

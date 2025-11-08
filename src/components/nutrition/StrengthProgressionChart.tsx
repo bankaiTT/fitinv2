@@ -16,7 +16,8 @@ export const StrengthProgressionChart = () => {
         .from('workout_logs')
         .select('*')
         .eq('user_id', user.id)
-        .order('workout_date', { ascending: true });
+        .order('logged_at', { ascending: true })
+        .limit(50);
       
       if (error) throw error;
       return data;
@@ -35,14 +36,14 @@ export const StrengthProgressionChart = () => {
     const groupedData: Record<string, Record<string, number>> = {};
     
     workoutLogs.forEach(log => {
-      const date = format(new Date(log.workout_date), 'MMM dd');
+      const date = format(new Date(log.logged_at), 'MMM dd');
       if (!groupedData[date]) {
         groupedData[date] = {};
       }
       
-      // Use the weight if available, otherwise use reps as a metric
-      const value = log.weight_lbs || (log.reps || 0);
-      groupedData[date][log.workout_type] = value;
+      // Use the weight (converted from kg to value)
+      const value = log.weight || 0;
+      groupedData[date][log.exercise_type] = value;
     });
 
     // Convert to array format for recharts
